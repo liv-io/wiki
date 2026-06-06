@@ -4,11 +4,11 @@
 
 - [Debian](#debian)
 - [k0s](#k0s)
-  - [Bootstrap Node](#bootstrap-node)
-  - [Additional Node](#additional-node)
-  - [Cluster](#cluster)
+  - [Single Node](#single-node)
+  - [Multi Node](#multi-node)
+    - [Bootstrap Node](#bootstrap-node)
+    - [Additional Node](#additional-node)
 - [Appendix](#appendix)
-  - [Reset Node](#reset-node)
 
 ## Debian
 
@@ -21,7 +21,47 @@
 
 ## k0s
 
-### Bootstrap Node
+### Single Node
+
+- Generate configuration file
+  ```
+  export CLUSTER="memos"
+  export DNS="10.1.11.1"
+
+  install --directory --owner=root --group=root --mode=0755 /etc/k0s
+  k0s config create > /etc/k0s/k0s.yaml
+  ```
+
+- Modify configuration file
+  ```
+  yq -i '.metadata.name = strenv(CLUSTER)' /etc/k0s/k0s.yaml
+  yq -i '.spec.extensions.storage.type = "openebs_local_storage"' /etc/k0s/k0s.yaml
+  yq -i '.spec.network.dns.upstreamNameServers = [strenv(DNS)]' /etc/k0s/k0s.yaml
+  yq -i '.spec.network.kubeProxy.mode = "nftables"' /etc/k0s/k0s.yaml
+  yq -i '.spec.storage.type = "kine" | del(.spec.storage.etcd) | del(.spec.installConfig.users.etcdUser)' /etc/k0s/k0s.yaml
+  ```
+
+- Validate configuration file
+  ```
+  k0s config validate --config /etc/k0s/k0s.yaml
+  ```
+
+- Start and verify ncde
+  ```
+  k0s install controller --single --iptables-mode nft --start
+
+  systemctl status k0scontroller.service --no-pager
+  k0s status
+  ```
+
+- Validate status of node
+  ```
+  k0s kubectl get nodes
+  ```
+
+### Multi Node
+
+#### Bootstrap Node
 
 - Generate configuration file
   ```
@@ -44,6 +84,7 @@
   yq -i '.spec.network.controlPlaneLoadBalancing = {"enabled": true, "type": "Keepalived", "keepalived": {"vrrpInstances": [{"virtualIPs": [strenv(VIP) + "/24"], "authPass": strenv(KEEPALIVED_PASSWORD)}]}}' /etc/k0s/k0s.yaml
   yq -i '.spec.network.controlPlaneLoadBalancing.keepalived.virtualServers = [{"ipAddress": .spec.api.externalAddress, "port": .spec.api.port, "backends": [{"ipAddress": strenv(K01), "port": .spec.api.port}, {"ipAddress": strenv(K02), "port": .spec.api.port}, {"ipAddress": strenv(K03), "port": .spec.api.port}]}]' /etc/k0s/k0s.yaml
   yq -i '.spec.network.dns.upstreamNameServers = [strenv(DNS)]' /etc/k0s/k0s.yaml
+  yq -i '.spec.network.kubeProxy.mode = "nftables"' /etc/k0s/k0s.yaml
   yq -i '.spec.network.nodeLocalLoadBalancing.enabled = true | .spec.network.nodeLocalLoadBalancing.type = "EnvoyProxy"' /etc/k0s/k0s.yaml
   yq -i '.spec.storage.etcd.extraArgs."auto-compaction-retention" = "1"' /etc/k0s/k0s.yaml
   yq -i 'del(.spec.api.address) | del(.spec.storage.etcd.peerAddress)' /etc/k0s/k0s.yaml
@@ -56,7 +97,7 @@
 
 - Start and verify node
   ```
-  k0s install controller -c /etc/k0s/k0s.yaml --enable-worker --no-taints --force --start
+  k0s install controller -c /etc/k0s/k0s.yaml --iptables-mode nft --enable-worker --no-taints --start
 
   systemctl status k0scontroller.service --no-pager
   k0s status
@@ -67,7 +108,7 @@
   k0s token create --role=controller --expiry=1h > /root/k0s-controller.token
   ```
 
-### Additional Nodes
+#### Additional Nodes
 
 - Copy configuration file and token from bootstrap-node
   ```
@@ -84,13 +125,11 @@
 
 - Start and verify node
   ```
-  k0s install controller -c /etc/k0s/k0s.yaml --token-file /root/k0s-controller.token --enable-worker --no-taints --force --start
+  k0s install controller -c /etc/k0s/k0s.yaml --token-file /root/k0s-controller.token --iptables-mode nft --enable-worker --no-taints --start
 
   systemctl status k0scontroller.service --no-pager
   k0s status
   ```
-
-### Cluster
 
 - Validate status of all nodes
   ```
@@ -104,4 +143,6 @@
 
 ## Appendix
 
+- [Configuration Options](https://github.com/k0sproject/k0s/blob/main/docs/configuration.md)
 - [Control Plane Load Balancing](https://docs.k0sproject.io/stable/cplb)
+- [Kine](https://github.com/k3s-io/kine)

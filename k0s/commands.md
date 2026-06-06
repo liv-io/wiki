@@ -19,4 +19,4 @@
 
 ## Appendix
 
-- [k0s Command Line](https://docs.k0sproject.io/stable/cli)
+- [CLI Documentation](https://docs.k0sproject.io/stable/cli)
