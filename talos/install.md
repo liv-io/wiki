@@ -22,7 +22,7 @@
 
 - Download, verify and install `cosign`
   ```
-  export COSIGN_VERSION="3.0.6"
+  export COSIGN_VERSION="3.1.1"
   install --directory --owner=root --group=root --mode=0755 /usr/local/src/cosign/${COSIGN_VERSION}
 
   curl --proto '=https' --tlsv1.3 \
@@ -61,7 +61,7 @@
 
 - Download, verify and install `yq`
   ```
-  export YQ_VERSION="4.53.2"
+  export YQ_VERSION="4.53.3"
   install --directory --owner=root --group=root --mode=0755 /usr/local/src/yq/${YQ_VERSION}
 
   curl --proto '=https' --tlsv1.3 \
@@ -91,7 +91,7 @@
 
 - Download, verify and install `talosctl`
   ```
-  export TALOS_VERSION="1.13.3"
+  export TALOS_VERSION="1.13.4"
   install --directory --owner=root --group=root --mode=0755 /usr/local/src/talosctl/${TALOS_VERSION}
 
   curl --proto '=https' --tlsv1.3 \

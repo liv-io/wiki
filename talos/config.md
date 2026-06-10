@@ -100,4 +100,16 @@ done
   talosctl get timestatus
   ```
 
+- Generate a custom installer image using [Talos Image Factory](https://factory.talos.dev)
+  ```
+  [x] siderolabs/iscsi-tools
+  [x] siderolabs/util-linux-tools
+  ```
+
+- Upgrade each cluster member sequentially
+  ```
+  talosctl upgrade --nodes 10.1.17.31 --image factory.talos.dev/metal-installer/<schematic-id>:v1.13.3
+  talosctl health -n 10.1.17.31
+  ```
+
 ## Appendix
