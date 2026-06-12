@@ -84,7 +84,7 @@
 - Add container registry credentials to Containerd
   ```
   install --directory --owner=root --group=root --mode=0750 /etc/k0s/containerd.d
-  ```
+
   cat <<EOF > /etc/k0s/containerd.d/registry-auth.toml
   [plugins."io.containerd.grpc.v1.cri".registry.configs."registry.liv.io".auth]
     username = "YOUR_USERNAME"
