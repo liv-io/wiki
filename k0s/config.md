@@ -19,6 +19,20 @@
   systemctl start nftables.service
   ```
 
+- Add http/https proxy settings
+  ```
+  install --directory --owner=root --group=root --mode=0755 /etc/systemd/system/k0scontroller.service.d
+
+  cat <<EOF > /etc/systemd/system/k0scontroller.service.d/http-proxy.conf
+  [Service]
+  Environment="HTTP_PROXY=http://fp.liv.io:3128"
+  Environment="HTTPS_PROXY=http://fp.liv.io:3128"
+  Environment="NO_PROXY=localhost,127.0.0.1,10.1.11.1,10.244.0.0/16,10.96.0.0/12,memos02.liv.io,.svc,.cluster.local"
+  EOF
+
+  systemctl daemon-reload
+  ```
+
 ## k0s
 
 ### Single Node
@@ -38,6 +52,7 @@
   yq -i '.spec.extensions.storage.type = "openebs_local_storage"' /etc/k0s/k0s.yaml
   yq -i '.spec.network.dns.upstreamNameServers = [strenv(DNS)]' /etc/k0s/k0s.yaml
   yq -i '.spec.network.kubeProxy.mode = "nftables"' /etc/k0s/k0s.yaml
+  yq -i '.spec.network.provider = "calico"' /etc/k0s/k0s.yaml
   yq -i '.spec.storage.type = "kine" | del(.spec.storage.etcd) | del(.spec.installConfig.users.etcdUser)' /etc/k0s/k0s.yaml
   ```
 
@@ -57,6 +72,7 @@
 - Validate status of node
   ```
   k0s kubectl get nodes
+  k0s kubectl get pods -n kube-system
   ```
 
 - OpenEBS storage
@@ -70,10 +86,10 @@
   install --directory --owner=root --group=root --mode=0750 /etc/k0s/containerd.d
   ```
   cat <<EOF > /etc/k0s/containerd.d/registry-auth.toml
-[plugins."io.containerd.grpc.v1.cri".registry.configs."registry.liv.io".auth]
-  username = "YOUR_USERNAME"
-  password = "YOUR_PASSWORD"
-EOF
+  [plugins."io.containerd.grpc.v1.cri".registry.configs."registry.liv.io".auth]
+    username = "YOUR_USERNAME"
+    password = "YOUR_PASSWORD"
+  EOF
   ```
 
 ### Multi Node
@@ -103,6 +119,7 @@ EOF
   yq -i '.spec.network.dns.upstreamNameServers = [strenv(DNS)]' /etc/k0s/k0s.yaml
   yq -i '.spec.network.kubeProxy.mode = "nftables"' /etc/k0s/k0s.yaml
   yq -i '.spec.network.nodeLocalLoadBalancing.enabled = true | .spec.network.nodeLocalLoadBalancing.type = "EnvoyProxy"' /etc/k0s/k0s.yaml
+  yq -i '.spec.network.provider = "calico"' /etc/k0s/k0s.yaml
   yq -i '.spec.storage.etcd.extraArgs."auto-compaction-retention" = "1"' /etc/k0s/k0s.yaml
   yq -i 'del(.spec.api.address) | del(.spec.storage.etcd.peerAddress)' /etc/k0s/k0s.yaml
   ```
@@ -160,8 +177,9 @@ EOF
 
 ## Appendix
 
+- [Calico](https://docs.tigera.io/calico)
 - [Configuration Options](https://github.com/k0sproject/k0s/blob/main/docs/configuration.md)
 - [Control Plane Load Balancing](https://docs.k0sproject.io/stable/cplb)
 - [Kine](https://github.com/k3s-io/kine)
 - [containerd](https://containerd.io)
-- [openebs](https://openebs.io)
+- [OpenEBS](https://openebs.io)
