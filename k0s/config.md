@@ -48,7 +48,7 @@
 
 - Start and verify ncde
   ```
-  k0s install controller --single --iptables-mode nft --start
+  k0s install controller --config /etc/k0s/k0s.yaml --single --iptables-mode nft --start
 
   systemctl status k0scontroller.service --no-pager
   k0s status
@@ -57,6 +57,23 @@
 - Validate status of node
   ```
   k0s kubectl get nodes
+  ```
+
+- OpenEBS storage
+  ```
+  yq -i '.spec.extensions.storage.type = "openebs_local_storage"' /etc/k0s/k0s.yaml
+  yq -i '.spec.extensions.storage.create_default_storage_class = true' /etc/k0s/k0s.yaml
+  ```
+
+- Add container registry credentials to Containerd
+  ```
+  install --directory --owner=root --group=root --mode=0750 /etc/k0s/containerd.d
+  ```
+  cat <<EOF > /etc/k0s/containerd.d/registry-auth.toml
+[plugins."io.containerd.grpc.v1.cri".registry.configs."registry.liv.io".auth]
+  username = "YOUR_USERNAME"
+  password = "YOUR_PASSWORD"
+EOF
   ```
 
 ### Multi Node
@@ -97,7 +114,7 @@
 
 - Start and verify node
   ```
-  k0s install controller -c /etc/k0s/k0s.yaml --iptables-mode nft --enable-worker --no-taints --start
+  k0s install controller --config /etc/k0s/k0s.yaml --iptables-mode nft --enable-worker --no-taints --start
 
   systemctl status k0scontroller.service --no-pager
   k0s status
@@ -146,3 +163,5 @@
 - [Configuration Options](https://github.com/k0sproject/k0s/blob/main/docs/configuration.md)
 - [Control Plane Load Balancing](https://docs.k0sproject.io/stable/cplb)
 - [Kine](https://github.com/k3s-io/kine)
+- [containerd](https://containerd.io)
+- [openebs](https://openebs.io)
