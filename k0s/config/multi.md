@@ -4,10 +4,8 @@
 
 - [Debian](#debian)
 - [k0s](#k0s)
-  - [Single Node](#single-node)
-  - [Multi Node](#multi-node)
-    - [Bootstrap Node](#bootstrap-node)
-    - [Additional Node](#additional-node)
+  - [Bootstrap Node](#bootstrap-node)
+  - [Additional Node](#additional-node)
 - [Appendix](#appendix)
 
 ## Debian
@@ -27,7 +25,7 @@
   [Service]
   Environment="HTTP_PROXY=http://fp.liv.io:3128"
   Environment="HTTPS_PROXY=http://fp.liv.io:3128"
-  Environment="NO_PROXY=localhost,127.0.0.1,10.1.11.1,10.244.0.0/16,10.96.0.0/12,memos02.liv.io,.svc,.cluster.local"
+  Environment="NO_PROXY=NO_PROXY=localhost,127.0.0.1,::1,bs.liv.io,backup.liv.io,ca.liv.io,10.1.13.61,10.244.0.0/16,10.96.0.0/12,memos02.liv.io,.svc,.cluster.local"
   EOF
 
   systemctl daemon-reload
@@ -35,66 +33,7 @@
 
 ## k0s
 
-### Single Node
-
-- Generate configuration file
-  ```
-  export CLUSTER="memos"
-  export DNS="10.1.11.1"
-
-  install --directory --owner=root --group=root --mode=0755 /etc/k0s
-  k0s config create > /etc/k0s/k0s.yaml
-  ```
-
-- Modify configuration file
-  ```
-  yq -i '.metadata.name = strenv(CLUSTER)' /etc/k0s/k0s.yaml
-  yq -i '.spec.extensions.storage.type = "openebs_local_storage"' /etc/k0s/k0s.yaml
-  yq -i '.spec.network.dns.upstreamNameServers = [strenv(DNS)]' /etc/k0s/k0s.yaml
-  yq -i '.spec.network.kubeProxy.mode = "nftables"' /etc/k0s/k0s.yaml
-  yq -i '.spec.network.provider = "calico"' /etc/k0s/k0s.yaml
-  yq -i '.spec.storage.type = "kine" | del(.spec.storage.etcd) | del(.spec.installConfig.users.etcdUser)' /etc/k0s/k0s.yaml
-  ```
-
-- Validate configuration file
-  ```
-  k0s config validate --config /etc/k0s/k0s.yaml
-  ```
-
-- Start and verify ncde
-  ```
-  k0s install controller --config /etc/k0s/k0s.yaml --single --iptables-mode nft --start
-
-  systemctl status k0scontroller.service --no-pager
-  k0s status
-  ```
-
-- Validate status of node
-  ```
-  k0s kubectl get nodes
-  k0s kubectl get pods -n kube-system
-  ```
-
-- OpenEBS storage
-  ```
-  yq -i '.spec.extensions.storage.type = "openebs_local_storage"' /etc/k0s/k0s.yaml
-  yq -i '.spec.extensions.storage.create_default_storage_class = true' /etc/k0s/k0s.yaml
-  ```
-
-- Add container registry credentials to Containerd
-  ```
-  install --directory --owner=root --group=root --mode=0750 /etc/k0s/containerd.d
-
-  cat <<EOF > /etc/k0s/containerd.d/registry-auth.toml
-  [plugins."io.containerd.grpc.v1.cri".registry.configs."registry.liv.io".auth]
-    username = "YOUR_USERNAME"
-    password = "YOUR_PASSWORD"
-  EOF
-  ```
-
-### Multi Node
-
-#### Bootstrap Node
+### Bootstrap Node
 
 - Generate configuration file
   ```
@@ -142,7 +81,7 @@
   k0s token create --role=controller --expiry=1h > /root/k0s-controller.token
   ```
 
-#### Additional Nodes
+### Additional Nodes
 
 - Copy configuration file and token from bootstrap-node
   ```
@@ -180,6 +119,3 @@
 - [Calico](https://docs.tigera.io/calico)
 - [Configuration Options](https://github.com/k0sproject/k0s/blob/main/docs/configuration.md)
 - [Control Plane Load Balancing](https://docs.k0sproject.io/stable/cplb)
-- [Kine](https://github.com/k3s-io/kine)
-- [containerd](https://containerd.io)
-- [OpenEBS](https://openebs.io)

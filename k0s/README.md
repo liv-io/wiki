@@ -16,7 +16,8 @@
 
 ## Config
 
-- [config.md](./config.md)
+- [Single Node](./config/single.md)
+- [Multi Node](./config/multi.md)
 
 ## Upgrade
 
