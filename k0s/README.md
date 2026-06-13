@@ -12,7 +12,7 @@
 
 ## Install
 
-- [install.md](./install.md)
+- [Install](./install.md)
 
 ## Config
 
@@ -23,7 +23,7 @@
 
 ## Commands
 
-- [commands.md](./commands.md)
+- [Commands](./commands.md)
 
 ## Appendix
 

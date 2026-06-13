@@ -4,9 +4,9 @@
 
 - [Debian](#debian)
 - [Cosign](#cosign)
+- [Helm](#helm)
 - [k0s](#k0s)
 - [k0sctl](#k0sctl)
-- [Helm](#helm)
 - [Appendix](#appendix)
 
 ## Debian
@@ -15,108 +15,25 @@
 > Debian stable minimal (`netinst`) + OpenSSH
 
 - Install dependencies
-```
-apt update
-apt install --no-install-recommends -y ca-certificates curl git gpg tar
-```
-
-- Install `yq` (written in Go)
   ```
-  export YQ_VERSION="4.53.3"
-  install --directory --owner=root --group=root --mode=0755 /usr/local/src/yq/${YQ_VERSION}
-
-  curl --proto '=https' --tlsv1.3 \
-      --location https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64.tar.gz \
-      --output /usr/local/src/yq/${YQ_VERSION}/yq_linux_amd64.tar.gz
-
-  tar --extract --gzip --file=/usr/local/src/yq/${YQ_VERSION}/yq_linux_amd64.tar.gz --directory=/usr/local/src/yq/${YQ_VERSION} --no-same-owner
-
-  chmod +x /usr/local/src/yq/${YQ_VERSION}/yq_linux_amd64
-  ln -snf /usr/local/src/yq/${YQ_VERSION}/yq_linux_amd64 /usr/local/bin/yq
+  apt update
+  apt install --no-install-recommends -y ca-certificates curl git
   ```
 
 ## Cosign
 
-- Download, verify and install `cosign`
-  ```
-  export COSIGN_VERSION="3.1.1"
-  install --directory --owner=root --group=root --mode=0755 /usr/local/src/cosign/${COSIGN_VERSION}
+- Install [cosign](../cosign/README.md#install)
 
-  curl --proto '=https' --tlsv1.3 \
-      --location https://github.com/sigstore/cosign/releases/download/v${COSIGN_VERSION}/cosign-linux-amd64 \
-      --output /usr/local/src/cosign/${COSIGN_VERSION}/cosign-linux-amd64
-  curl --proto '=https' --tlsv1.3 \
-      --location https://github.com/sigstore/cosign/releases/download/v${COSIGN_VERSION}/cosign-linux-amd64.sigstore.json \
-      --output /usr/local/src/cosign/${COSIGN_VERSION}/cosign-linux-amd64.sigstore.json
+## Helm
 
-  chmod +x /usr/local/src/cosign/${COSIGN_VERSION}/cosign-linux-amd64
-  ln -s /usr/local/src/cosign/${COSIGN_VERSION}/cosign-linux-amd64 /usr/local/bin/cosign
-
-  cosign verify-blob \
-      --bundle /usr/local/src/cosign/${COSIGN_VERSION}/cosign-linux-amd64.sigstore.json \
-      --certificate-identity keyless@projectsigstore.iam.gserviceaccount.com \
-      --certificate-oidc-issuer https://accounts.google.com \
-      /usr/local/src/cosign/${COSIGN_VERSION}/cosign-linux-amd64
-  curl --proto '=https' --tlsv1.3 \
-      --location https://github.com/sigstore/cosign/releases/download/v${COSIGN_VERSION}/cosign_checksums.txt \
-      --output /usr/local/src/cosign/${COSIGN_VERSION}/cosign_checksums.txt
-  curl --proto '=https' --tlsv1.3 \
-      --location https://github.com/sigstore/cosign/releases/download/v${COSIGN_VERSION}/cosign_checksums.txt.sigstore.json \
-      --output /usr/local/src/cosign/${COSIGN_VERSION}/cosign_checksums.txt.sigstore.json
-
-  cosign verify-blob \
-      --bundle /usr/local/src/cosign/${COSIGN_VERSION}/cosign_checksums.txt.sigstore.json \
-      --certificate-identity keyless@projectsigstore.iam.gserviceaccount.com \
-      --certificate-oidc-issuer https://accounts.google.com \
-      /usr/local/src/cosign/${COSIGN_VERSION}/cosign_checksums.txt
-
-  cd /usr/local/src/cosign/${COSIGN_VERSION}
-  sha256sum --ignore-missing --check cosign_checksums.txt
-  ```
-
-# Helm
-
-- Download, verify and install `helm`
-  ```
-  export HELM_VERSION="4.2.1"
-  install --directory --owner=root --group=root --mode=0755 /usr/local/src/helm/${HELM_VERSION}
-
-  curl --proto '=https' --tlsv1.3 \
-      --location https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz \
-      --output /usr/local/src/helm/${HELM_VERSION}/helm-v${HELM_VERSION}-linux-amd64.tar.gz
-  curl --proto '=https' --tlsv1.3 \
-      --location https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz.sha256 \
-      --output helm-v${HELM_VERSION}-linux-amd64.tar.gz.sha256
-
-  curl --proto '=https' --tlsv1.3 \
-      --location https://github.com/helm/helm/releases/download/v${HELM_VERSION}/helm-v${HELM_VERSION}-linux-amd64.tar.gz.asc \
-      --output /usr/local/src/helm/${HELM_VERSION}/helm-v${HELM_VERSION}-linux-amd64.tar.gz.asc
-  curl --proto '=https' --tlsv1.3 \
-      --location https://github.com/helm/helm/releases/download/v${HELM_VERSION}/helm-v${HELM_VERSION}-linux-amd64.tar.gz.sha256.asc \
-      --output /usr/local/src/helm/${HELM_VERSION}/helm-v${HELM_VERSION}-linux-amd64.tar.gz.sha256.asc
-  curl --proto '=https' --tlsv1.3 \
-      --location https://github.com/helm/helm/releases/download/v${HELM_VERSION}/helm-v${HELM_VERSION}-linux-amd64.tar.gz.sha256sum.asc \
-      --output /usr/local/src/helm/${HELM_VERSION}/helm-v${HELM_VERSION}-linux-amd64.tar.gz.sha256sum.asc
-  curl --proto '=https' --tlsv1.3 \
-      --location https://raw.githubusercontent.com/helm/helm/refs/tags/v${HELM_VERSION}/KEYS \
-      --output /usr/local/src/helm/${HELM_VERSION}/KEYS
-
-  cd /usr/local/src/helm/${HELM_VERSION}
-  gpg --import KEYS
-  gpg --verify helm-v${HELM_VERSION}-linux-amd64.tar.gz.asc helm-v${HELM_VERSION}-linux-amd64.tar.gz
-  gpg --verify helm-v${HELM_VERSION}-linux-amd64.tar.gz.sha256.asc helm-v${HELM_VERSION}-linux-amd64.tar.gz.sha256
-  echo "$(cat helm-v${HELM_VERSION}-linux-amd64.tar.gz.sha256)  helm-v${HELM_VERSION}-linux-amd64.tar.gz" | sha256sum --check -
-
-  tar --extract --gzip --file=/usr/local/src/helm/${HELM_VERSION}/helm-v${HELM_VERSION}-linux-amd64.tar.gz --directory=/usr/local/src/helm/${HELM_VERSION} --no-same-owner
-  chmod +x /usr/local/src/helm/${HELM_VERSION}/linux-amd64/helm
-  ln -snf /usr/local/src/helm/${HELM_VERSION}/linux-amd64/helm /usr/local/bin/helm
-  ```
+- Install [Helm](../helm/README.md#install)
 
 ## k0s
 
 - Download, verify and install `k0s`
   ```
   export K0S_VERSION="1.35.4+k0s.0"
+
   install --directory --owner=root --group=root --mode=0755 /usr/local/src/k0s/${K0S_VERSION}
 
   curl --proto '=https' --tlsv1.3 \
@@ -145,28 +62,8 @@ apt install --no-install-recommends -y ca-certificates curl git gpg tar
 
 ## k0sctl
 
-- Download, verify and install `k0sctl`
-  ```
-  export K0SCTL_VERSION="0.30.1"
-  install --directory --owner=root --group=root --mode=0755 /usr/local/src/k0sctl/${K0SCTL_VERSION}
-
-  curl --proto '=https' --tlsv1.3 \
-      --location https://github.com/k0sproject/k0sctl/releases/download/v${K0SCTL_VERSION}/checksums.txt \
-      --output /usr/local/src/k0sctl/${K0SCTL_VERSION}/checksums.txt
-  curl --proto '=https' --tlsv1.3 \
-      --location https://github.com/k0sproject/k0sctl/releases/download/v${K0SCTL_VERSION}/k0sctl-linux-arm64 \
-      --output /usr/local/src/k0sctl/${K0SCTL_VERSION}/k0sctl-linux-arm64
-
-  cd /usr/local/src/k0sctl/${K0SCTL_VERSION}
-  sha256sum --ignore-missing --check checksums.txt
-
-  chmod +x /usr/local/src/k0sctl/${K0SCTL_VERSION}/k0sctl-linux-arm64
-  ln -snf /usr/local/src/k0sctl/${K0SCTL_VERSION}/k0sctl-linux-arm64 /usr/local/bin/k0sctl
-  ```
+- Install [k0sctl](../k0sctl/README.md#install)
 
 ## Appendix
 
-- [Cosign](https://github.com/sigstore/cosign)
-- [Helm](https://helm.sh)
 - [k0s](https://k0sproject.io)
-- [k0sctl](https://github.com/k0sproject/k0sctl)
