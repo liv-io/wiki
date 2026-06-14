@@ -25,7 +25,7 @@
   [Service]
   Environment="HTTP_PROXY=http://fp.liv.io:3128"
   Environment="HTTPS_PROXY=http://fp.liv.io:3128"
-  Environment="NO_PROXY=NO_PROXY=localhost,127.0.0.1,::1,bs.liv.io,backup.liv.io,ca.liv.io,10.1.13.61,10.244.0.0/16,10.96.0.0/12,memos02.liv.io,.svc,.cluster.local"
+  Environment="NO_PROXY=localhost,127.0.0.1,::1,bs.liv.io,backup.liv.io,ca.liv.io,10.1.13.61,10.244.0.0/16,10.96.0.0/12,memos02.liv.io,.svc,.cluster.local"
   EOF
 
   systemctl daemon-reload

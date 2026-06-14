@@ -7,6 +7,7 @@
 - [Install](#install)
   - [Debian](#debian)
   - [Cosign](#cosign)
+  - [yq](#yq)
   - [Helm](#helm)
   - [k0s](#k0s)
   - [k0sctl](#k0sctl)
@@ -31,7 +32,11 @@
 
 ### Cosign
 
-- Install [cosign](../cosign/README.md#install)
+- Install [Cosign](../cosign/README.md#install)
+
+### yq
+
+- Install [yq](../yq/README.md#install)
 
 ### Helm
 
@@ -49,7 +54,7 @@
 
 - Download, verify and install `k0s`
   ```
-  export K0S_VERSION="1.35.4+k0s.0"
+  export K0S_VERSION="1.36.1+k0s.0"
 
   install --directory --owner=root --group=root --mode=0755 /usr/local/src/k0s/${K0S_VERSION}
 
