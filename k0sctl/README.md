@@ -26,14 +26,14 @@
       --location https://github.com/k0sproject/k0sctl/releases/download/v${K0SCTL_VERSION}/checksums.txt \
       --output /usr/local/src/k0sctl/${K0SCTL_VERSION}/checksums.txt
   curl --proto '=https' --tlsv1.3 \
-      --location https://github.com/k0sproject/k0sctl/releases/download/v${K0SCTL_VERSION}/k0sctl-linux-arm64 \
-      --output /usr/local/src/k0sctl/${K0SCTL_VERSION}/k0sctl-linux-arm64
+      --location https://github.com/k0sproject/k0sctl/releases/download/v${K0SCTL_VERSION}/k0sctl-linux-amd64 \
+      --output /usr/local/src/k0sctl/${K0SCTL_VERSION}/k0sctl-linux-amd64
 
   cd /usr/local/src/k0sctl/${K0SCTL_VERSION}
   sha256sum --ignore-missing --check checksums.txt
 
-  chmod +x /usr/local/src/k0sctl/${K0SCTL_VERSION}/k0sctl-linux-arm64
-  ln -snf /usr/local/src/k0sctl/${K0SCTL_VERSION}/k0sctl-linux-arm64 /usr/local/bin/k0sctl
+  chmod +x /usr/local/src/k0sctl/${K0SCTL_VERSION}/k0sctl-linux-amd64
+  ln -snf /usr/local/src/k0sctl/${K0SCTL_VERSION}/k0sctl-linux-amd64 /usr/local/bin/k0sctl
   ```
 
 ## Commands
