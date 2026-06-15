@@ -2,21 +2,18 @@
 
 ## Index
 
-- [k0s](#k0s)
-  - [Manual Upgrade](#manual-upgrade)
-  - [Reset Node](#reset-node)
+- [Manual Upgrade](#manual-upgrade)
+- [Reset Node](#reset-node)
 - [Appendix](#appendix)
 
-## k0s
+## Manual Upgrade
 
-### Manual Upgrade
+- Download, verify and install latest [k0s](README.md#k0s) release
 
 - Stop the node
   ```
   systemctl stop k0scontroller.service
   ```
-
-- Install latest [k0s](../README.md#k0s)
 
 - Update the systemd unit file
   ```
@@ -37,7 +34,7 @@
   k0s kubectl get all -n kube-system
   ```
 
-### Reset Node
+## Reset Node
 
 - Reset node and remove configuration
   ```
@@ -51,4 +48,5 @@
 
 ## Appendix
 
-- [CLI Documentation](https://docs.k0sproject.io/stable/cli)
+- [Upgrade](https://docs.k0sproject.io/head/upgrade)
+- [CLI](https://docs.k0sproject.io/stable/cli)
