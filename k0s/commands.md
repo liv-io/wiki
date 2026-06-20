@@ -17,7 +17,12 @@
 
 - Update the systemd unit file
   ```
-  k0s install controller --config /etc/k0s/k0s.yaml --single --iptables-mode nft --start --force
+  k0s install controller --config /etc/k0s/k0s.yaml --single --iptables-mode nft --profile=low-power --start --force
+  ```
+
+- Vacuum the Kine SQLite database
+  ```
+  sqlite3 /var/lib/k0s/db/kine.db "VACUUM;"
   ```
 
 - Start and verify node

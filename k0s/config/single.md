@@ -51,6 +51,8 @@
   yq -i '.spec.network.kubeProxy.mode = "nftables"' /etc/k0s/k0s.yaml
   yq -i '.spec.network.provider = "calico"' /etc/k0s/k0s.yaml
   yq -i '.spec.storage.type = "kine" | del(.spec.storage.etcd) | del(.spec.installConfig.users.etcdUser)' /etc/k0s/k0s.yaml
+  yq -i '.spec.telemetry.enabled = false' /etc/k0s/k0s.yaml
+  yq -i '.spec.workerProfiles = [{"name": "low-power", "values": {"housekeepingInterval": "30s", "nodeStatusUpdateFrequency": "30s"}}]' /etc/k0s/k0s.yaml
   ```
 
 - Validate configuration file
@@ -60,7 +62,7 @@
 
 - Start and verify node
   ```
-  k0s install controller --config /etc/k0s/k0s.yaml --single --iptables-mode nft --start
+  k0s install controller --config /etc/k0s/k0s.yaml --single --iptables-mode nft --profile=low-power --start
 
   systemctl status k0scontroller.service --no-pager
   k0s status
