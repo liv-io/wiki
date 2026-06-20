@@ -8,16 +8,10 @@
   - [Containerd](#containerd)
   - [Traefik](#traefik)
   - [Container](#container)
+  - [Calico](#calico)
 - [Appendix](#appendix)
 
 ## Debian
-
-- Install, enable and start `nftables`
-  ```
-  apt -y --no-install-recommends install nftables
-  systemctl enable nftables.service
-  systemctl start nftables.service
-  ```
 
 - Add http/https proxy settings
   ```
@@ -47,9 +41,9 @@
 - Modify configuration file
   ```
   yq -i '.metadata.name = strenv(CLUSTER)' /etc/k0s/k0s.yaml
+  yq -i '.spec.controllerManager.extraArgs += {"leader-elect-lease-duration": "300s", "leader-elect-renew-deadline": "240s", "leader-elect-retry-period": "60s"}' /etc/k0s/k0s.yaml
   yq -i '.spec.network.dns.upstreamNameServers = [strenv(DNS)]' /etc/k0s/k0s.yaml
-  yq -i '.spec.network.kubeProxy.mode = "nftables"' /etc/k0s/k0s.yaml
-  yq -i '.spec.network.provider = "calico"' /etc/k0s/k0s.yaml
+  yq -i '.spec.scheduler.extraArgs += {"leader-elect-lease-duration": "300s","leader-elect-renew-deadline": "240s","leader-elect-retry-period": "60s"}' /etc/k0s/k0s.yaml
   yq -i '.spec.storage.type = "kine" | del(.spec.storage.etcd) | del(.spec.installConfig.users.etcdUser)' /etc/k0s/k0s.yaml
   yq -i '.spec.telemetry.enabled = false' /etc/k0s/k0s.yaml
   yq -i '.spec.workerProfiles = [{"name": "low-power", "values": {"housekeepingInterval": "30s", "nodeStatusUpdateFrequency": "30s"}}]' /etc/k0s/k0s.yaml
@@ -62,7 +56,7 @@
 
 - Start and verify node
   ```
-  k0s install controller --config /etc/k0s/k0s.yaml --single --iptables-mode nft --profile=low-power --start
+  k0s install controller --config /etc/k0s/k0s.yaml --single --profile=low-power --start
 
   systemctl status k0scontroller.service --no-pager
   k0s status
@@ -134,7 +128,7 @@
 
 - Copy (or symlink) root CA certificate
   ```
-  /usr/local/share/ca-certificates/ca1.liv.io.crt ./kustomize/traefik/
+  cp /usr/local/share/ca-certificates/ca1.liv.io.crt ./kustomize/traefik/
   ```
 
 - Create the Traefik `kustomization.yaml`
@@ -455,6 +449,43 @@
 - Query TLS encrypted endpoint
   ```
   curl --noproxy "*" https://memos02.liv.io
+  ```
+
+### Calico
+
+> [!NOTE]
+>  Optional: Use Calico as Container Network Interface (CNI)
+
+- Install, enable and start `nftables`
+  ```
+  apt -y --no-install-recommends install nftables
+  systemctl enable nftables.service
+  systemctl start nftables.service
+  ```
+
+- Modify configuration file
+  ```
+  yq -i '.spec.network.kubeProxy.mode = "nftables"' /etc/k0s/k0s.yaml
+  yq -i '.spec.network.provider = "calico"' /etc/k0s/k0s.yaml
+  ```
+
+- Update the systemd unit file
+  ```
+  k0s install controller --config /etc/k0s/k0s.yaml --single --iptables-mode nft --profile=low-power --start --force
+  ```
+
+- Start and verify node
+  ```
+  systemctl start k0scontroller.service
+
+  systemctl status k0scontroller.service --no-pager
+  k0s status
+  ```
+
+- Validate status of node
+  ```
+  k0s kubectl get nodes
+  k0s kubectl get all -n kube-system
   ```
 
 ## Appendix
