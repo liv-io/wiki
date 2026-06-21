@@ -7,8 +7,8 @@
   - [Local-Path](#local-path)
   - [Containerd](#containerd)
   - [Traefik](#traefik)
-  - [Container](#container)
   - [Calico](#calico)
+  - [App](#app)
 - [Appendix](#appendix)
 
 ## Debian
@@ -252,205 +252,6 @@
   k0s kubectl port-forward -n kube-system deployment/traefik 8080:8080
   ```
 
-### Container
-
-- Create a Kustomize deployment directory for an example application `memos`
-  ```
-  install --directory --owner=root --group=root --mode=0750 ./kustomize/memos
-  ```
-
-- Create the `kustomization.yaml` file
-  ```
-  cat <<EOF > ./kustomize/memos/kustomization.yaml
-  apiVersion: kustomize.config.k8s.io/v1beta1
-  kind: Kustomization
-
-  namespace: memos
-
-  resources:
-    - namespace.yaml
-    - pvc.yaml
-    - service.yaml
-    - deployment.yaml
-
-  images:
-    - name: registry.liv.io/liv/memos
-      newTag: 0.29.1-1
-  EOF
-  ```
-
-- Create the `namespace.yaml` file
-  ```
-  cat <<EOF > ./kustomize/memos/namespace.yaml
-  apiVersion: v1
-  kind: Namespace
-  metadata:
-    name: memos
-  EOF
-  ```
-
-- Create the `pvc.yaml` file
-  ```
-  cat <<EOF > ./kustomize/memos/pvc.yaml
-  apiVersion: v1
-  kind: PersistentVolumeClaim
-  metadata:
-    name: memos-pvc
-    namespace: memos
-  spec:
-    accessModes:
-      - ReadWriteOnce
-    storageClassName: local-path
-    resources:
-      requests:
-        storage: 5Gi
-  EOF
-  ```
-
-- Create the `service.yaml` file
-  ```
-  cat <<EOF > ./kustomize/memos/service.yaml
-  apiVersion: v1
-  kind: Service
-  metadata:
-    name: memos
-  spec:
-    type: ClusterIP
-    ports:
-    - port: 8081
-      targetPort: memos-http
-      protocol: TCP
-      name: http
-    selector:
-      app: memos
-  ---
-  apiVersion: networking.k8s.io/v1
-  kind: Ingress
-  metadata:
-    name: memos-ingress
-    annotations:
-      traefik.ingress.kubernetes.io/router.tls: "true"
-      traefik.ingress.kubernetes.io/router.tls.certresolver: "myresolver"
-      traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
-  spec:
-    ingressClassName: traefik
-    tls:
-      - hosts:
-          - memos02.liv.io
-    rules:
-    - host: memos02.liv.io
-      http:
-        paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: memos
-              port:
-                number: 8081
-  EOF
-  ```
-
-- Create the `deployment.yaml` file
-  ```
-  cat <<EOF > ./kustomize/memos/deployment.yaml
-  apiVersion: apps/v1
-  kind: Deployment
-  metadata:
-    name: memos
-  spec:
-    replicas: 1
-    strategy:
-      type: Recreate
-    selector:
-      matchLabels:
-        app: memos
-    template:
-      metadata:
-        labels:
-          app: memos
-      spec:
-        containers:
-        - name: memos
-          image: registry.liv.io/liv/memos
-          workingDir: /
-          ports:
-          - name: memos-http
-            containerPort: 8081
-            protocol: TCP
-          env:
-          - name: PORT
-            value: '8081'
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-              - CAP_MKNOD
-              - CAP_NET_RAW
-              - CAP_AUDIT_WRITE
-            privileged: false
-            readOnlyRootFilesystem: true
-            runAsGroup: 10000
-            runAsUser: 10000
-            seLinuxOptions:
-              type: spc_t
-          volumeMounts:
-          - name: memos-db
-            mountPath: /var/local/memos/db
-        volumes:
-        - name: memos-db
-          persistentVolumeClaim:
-            claimName: memos-pvc
-  EOF
-  ```
-
-- Render manifest
-  ```
-  kustomize build ./kustomize/memos/
-  k0s kubectl kustomize ./kustomize/memos/
-  ```
-
-- Run the client-side schema validation
-  ```
-  k0s kubectl apply -k ./kustomize/memos/ --dry-run=client
-  ```
-
-- Run the server-side schema validation
-  ```
-  k0s kubectl create namespace memos --dry-run=client -o yaml | k0s kubectl apply -f -
-  k0s kubectl apply -k ./kustomize/memos/ --dry-run=server
-  ```
-
-- Apply manifest
-  ```
-  k0s kubectl apply -k ./kustomize/memos/
-  ```
-
-- Verify deployment rollout status
-  ```
-  k0s kubectl rollout status -n memos deployment/memos
-  ```
-
-- Validate application
-  ```
-  k0s kubectl get all -n memos
-  ```
-
-- Inspect logs
-  ```
-  k0s kubectl logs -n memos deployment/memos --tail=100 -f
-  ```
-
-- Inspect container
-  ```
-  k0s kubectl exec -it -n memos deployment/memos -- ps -ef
-  ```
-
-- Query TLS encrypted endpoint
-  ```
-  curl --noproxy "*" https://memos02.liv.io
-  ```
-
 ### Calico
 
 > [!NOTE]
@@ -487,6 +288,13 @@
   k0s kubectl get nodes
   k0s kubectl get all -n kube-system
   ```
+
+### App
+
+- Deploy an application to k0s
+
+> [!TIP]
+>  See [Memos](../../memos/README.md) a practical example
 
 ## Appendix
 
