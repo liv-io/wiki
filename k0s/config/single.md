@@ -4,7 +4,7 @@
 
 - [Debian](#debian)
 - [k0s](#k0s)
-  - [OpenEBS](#openebs)
+  - [Local-Path](#local-path)
   - [Containerd](#containerd)
   - [Traefik](#traefik)
   - [Container](#container)
@@ -68,7 +68,7 @@
   k0s kubectl get all -n kube-system
   ```
 
-### OpenEBS
+### Local-Path
 
 - Download and apply `local-path-provisioner`
   ```
@@ -78,7 +78,7 @@
   k0s kubectl apply -f ./local-path-provisioner/deploy/local-path-storage.yaml
   ```
 
-- Configure OpenEBS storage extension
+- Configure `local-path-provisioner` storage extension
   ```
   yq -i '.spec.extensions.storage.type = "openebs_local_storage"' /etc/k0s/k0s.yaml
   yq -i '.spec.extensions.storage.create_default_storage_class = true' /etc/k0s/k0s.yaml
@@ -93,7 +93,7 @@
   k0s kubectl get all -n kube-system
   ```
 
-- Validate OpenEBS
+- Validate `local-path-provisioner`
   ```
   k0s kubectl get all -A -l app=local-path-provisioner
   ```
@@ -493,7 +493,8 @@
 - [Calico](https://docs.tigera.io/calico)
 - [Containerd](https://containerd.io)
 - [Kine](https://github.com/k3s-io/kine)
-- [OpenEBS](https://openebs.io)
+- [Kube-Router](https://kube-router.io)
 - [Traefik Ingress](https://github.com/k0sproject/k0s/blob/main/docs/examples/traefik-ingress.md)
 - [Traefik](https://traefik.io/traefik)
 - [k0s Configuration Options](https://github.com/k0sproject/k0s/blob/main/docs/configuration.md)
+- [local-path-provisioner](https://github.com/rancher/local-path-provisioner)
