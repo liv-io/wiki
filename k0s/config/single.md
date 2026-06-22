@@ -121,6 +121,11 @@
   EOF
   ```
 
+- Validate the `k0s` system
+  ```
+  k0s sysinfo
+  ```
+
 ### Traefik
 
 - Create a Kustomize deployment directory for Traefik
