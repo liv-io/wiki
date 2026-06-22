@@ -5,6 +5,7 @@
 - [Install](#install)
   - [Debian](#debian)
   - [k0s](#k0s)
+  - [k0sctl](#k0sctl)
   - [kustomize](#kustomize)
   - [Memos](#memos)
     - [Infra](#infra)
@@ -23,6 +24,10 @@
   apt update
   apt install --no-install-recommends -y git
   ```
+
+### k0s
+
+- Install [k0s](../k0s/README.md#install)
 
 ### k0sctl
 
@@ -302,6 +307,13 @@
   k0s kubectl get all -n memos
   ```
 
+- Query TLS encrypted endpoint
+  ```
+  curl --noproxy "*" https://memosliv.io
+  ```
+
+## Commands
+
 - Inspect logs
   ```
   k0s kubectl logs -n memos deployment/memos --tail=100 -f
@@ -312,12 +324,15 @@
   k0s kubectl exec -it -n memos deployment/memos -- ps -ef
   ```
 
-- Query TLS encrypted endpoint
+- Stop container
   ```
-  curl --noproxy "*" https://memosliv.io
+  k0s kubectl scale deployment memos --replicas=0 -n memos
   ```
 
-## Commands
+- Start container
+  ```
+  k0s kubectl scale deployment memos --replicas=1 -n memos
+  ```
 
 ## Appendix
 
