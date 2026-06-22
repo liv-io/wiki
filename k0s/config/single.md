@@ -8,7 +8,7 @@
   - [Containerd](#containerd)
   - [Traefik](#traefik)
   - [Calico](#calico)
-  - [App](#app)
+  - [Apps](#apps)
 - [Appendix](#appendix)
 
 ## Debian
@@ -113,7 +113,9 @@
   install --directory --owner=root --group=root --mode=0750 /etc/k0s/containerd.d
 
   cat <<EOF > /etc/k0s/containerd.d/registry-auth.toml
-  [plugins."io.containerd.grpc.v1.cri".registry.configs."registry.liv.io".auth]
+  version = 3
+
+  [plugins."io.containerd.cri.v1.images".registry.configs."registry.liv.io".auth]
     username = "${USERNAME}"
     password = "${PASSWORD}"
   EOF
@@ -289,7 +291,7 @@
   k0s kubectl get all -n kube-system
   ```
 
-### App
+### Apps
 
 - Deploy an application to k0s
 
