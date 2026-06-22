@@ -123,17 +123,17 @@
 
 - Create a Kustomize deployment directory for Traefik
   ```
-  install --directory --owner=root --group=root --mode=0750 ./kustomize/traefik
+  install --directory --owner=root --group=root --mode=0750 ./infra/traefik
   ```
 
 - Copy (or symlink) root CA certificate
   ```
-  cp /usr/local/share/ca-certificates/ca1.liv.io.crt ./kustomize/traefik/
+  cp /usr/local/share/ca-certificates/ca1.liv.io.crt ./infra/traefik/
   ```
 
 - Create the Traefik `kustomization.yaml`
   ```
-  cat <<EOF > ./kustomize/traefik/kustomization.yaml
+  cat <<EOF > ./infra/traefik/kustomization.yaml
   apiVersion: kustomize.config.k8s.io/v1beta1
   kind: Kustomization
 
@@ -223,13 +223,13 @@
 
 - Render manifest
   ```
-  kustomize build ./kustomize/traefik/ --enable-helm | k0s kubectl apply --dry-run=client -f -
-  kustomize build ./kustomize/traefik/ --enable-helm | k0s kubectl apply --dry-run=server -f -
+  kustomize build ./infra/traefik/ --enable-helm | k0s kubectl apply --dry-run=client -f -
+  kustomize build ./infra/traefik/ --enable-helm | k0s kubectl apply --dry-run=server -f -
   ```
 
 - Apply manifest
   ```
-  kustomize build ./kustomize/traefik/ --enable-helm | k0s kubectl apply -f -
+  kustomize build ./infra/traefik/ --enable-helm | k0s kubectl apply -f -
   ```
 
 - Verify deployment rollout status
@@ -294,7 +294,7 @@
 - Deploy an application to k0s
 
 > [!TIP]
->  See [Memos](../../memos/README.md) a practical example
+>  See [Memos](../../memos/README.md) for a practical example
 
 ## Appendix
 
