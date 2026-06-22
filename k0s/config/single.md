@@ -78,12 +78,6 @@
   k0s kubectl apply -f ./local-path-provisioner/deploy/local-path-storage.yaml
   ```
 
-- Configure `local-path-provisioner` storage extension
-  ```
-  yq -i '.spec.extensions.storage.type = "openebs_local_storage"' /etc/k0s/k0s.yaml
-  yq -i '.spec.extensions.storage.create_default_storage_class = true' /etc/k0s/k0s.yaml
-  ```
-
 - Restart k0s
   ```
   systemctl restart k0scontroller.service
