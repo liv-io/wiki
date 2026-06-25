@@ -79,17 +79,12 @@
         - op: add
           path: /metadata/annotations/storageclass.kubernetes.io~1is-default-class
           value: "true"
+  EOF
   ```
 
 - Apply manifest
   ```
-  k0s kubectl apply -f ./infra/local-path/kustomization.yaml
-  ```
-
-- Configure `local-path-provisioner` storage extension
-  ```
-  yq -i '.spec.extensions.storage.type = "openebs_local_storage"' /etc/k0s/k0s.yaml
-  yq -i '.spec.extensions.storage.create_default_storage_class = true' /etc/k0s/k0s.yaml
+  k0s kubectl apply -k ./infra/local-path/
   ```
 
 - Restart k0s
