@@ -70,12 +70,11 @@
 
 ### Local-Path
 
-- Download and apply `local-path-provisioner`
+- Apply `local-path-provisioner`
   ```
   export LOCAL_PATH_PROVISIONER_VERSION="0.0.36"
 
-  git clone --single-branch --branch v${LOCAL_PATH_PROVISIONER_VERSION} https://github.com/rancher/local-path-provisioner.git
-  k0s kubectl apply -f ./local-path-provisioner/deploy/local-path-storage.yaml
+  k0s kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/v${LOCAL_PATH_PROVISIONER_VERSION}/deploy/local-path-storage.yaml
   ```
 
 - Restart k0s

@@ -27,7 +27,7 @@
 - Install dependencies
   ```
   apt update
-  apt install --no-install-recommends -y ca-certificates curl git
+  apt install --no-install-recommends -y ca-certificates curl
   ```
 
 ### Cosign
