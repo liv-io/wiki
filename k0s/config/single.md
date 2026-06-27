@@ -41,9 +41,9 @@
 - Modify configuration file
   ```
   yq -i '.metadata.name = strenv(CLUSTER)' /etc/k0s/k0s.yaml
-  yq -i '.spec.controllerManager.extraArgs += {"leader-elect-lease-duration": "300s", "leader-elect-renew-deadline": "240s", "leader-elect-retry-period": "60s"}' /etc/k0s/k0s.yaml
+  yq -i '.spec.controllerManager.extraArgs["leader-elect"] = "false"' /etc/k0s/k0s.yaml
   yq -i '.spec.network.dns.upstreamNameServers = [strenv(DNS)]' /etc/k0s/k0s.yaml
-  yq -i '.spec.scheduler.extraArgs += {"leader-elect-lease-duration": "300s","leader-elect-renew-deadline": "240s","leader-elect-retry-period": "60s"}' /etc/k0s/k0s.yaml
+  yq -i '.spec.scheduler.extraArgs["leader-elect"] = "false"' /etc/k0s/k0s.yaml
   yq -i '.spec.storage.type = "kine" | del(.spec.storage.etcd) | del(.spec.installConfig.users.etcdUser)' /etc/k0s/k0s.yaml
   yq -i '.spec.telemetry.enabled = false' /etc/k0s/k0s.yaml
   yq -i '.spec.workerProfiles = [{"name": "low-power", "values": {"housekeepingInterval": "30s", "nodeStatusUpdateFrequency": "30s"}}]' /etc/k0s/k0s.yaml
