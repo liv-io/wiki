@@ -25,7 +25,7 @@
       --output /usr/local/src/helm/${HELM_VERSION}/helm-v${HELM_VERSION}-linux-amd64.tar.gz
   curl --proto '=https' --tlsv1.3 \
       --location https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz.sha256 \
-      --output helm-v${HELM_VERSION}-linux-amd64.tar.gz.sha256
+      --output /usr/local/src/helm/${HELM_VERSION}/helm-v${HELM_VERSION}-linux-amd64.tar.gz.sha256
 
   curl --proto '=https' --tlsv1.3 \
       --location https://github.com/helm/helm/releases/download/v${HELM_VERSION}/helm-v${HELM_VERSION}-linux-amd64.tar.gz.asc \
