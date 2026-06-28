@@ -77,13 +77,9 @@
   k0s kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/v${LOCAL_PATH_PROVISIONER_VERSION}/deploy/local-path-storage.yaml
   ```
 
-- Restart k0s
+- Wait until `local-path-provisioner` is ready
   ```
-  systemctl restart k0scontroller.service
-
-  systemctl status k0scontroller.service --no-pager
-  k0s status
-  k0s kubectl get all -n kube-system
+  k0s kubectl get pods -n local-path-storage -w
   ```
 
 - Validate `local-path-provisioner`
@@ -116,7 +112,7 @@
 
 - Validate the `k0s` system
   ```
-  k0s sysinfo
+  k0s sysinfo | grep -v '(pass)'
   ```
 
 ### Traefik
