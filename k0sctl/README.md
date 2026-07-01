@@ -16,7 +16,7 @@
 
 - Download, verify and install `k0sctl`
   ```
-  export K0SCTL_VERSION="0.31.0"
+  export K0SCTL_VERSION="0.31.1"
 
   install --directory --owner=root --group=root --mode=0755 /usr/local/src/k0sctl/${K0SCTL_VERSION}
 
