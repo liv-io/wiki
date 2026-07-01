@@ -2,9 +2,27 @@
 
 ## Index
 
+- [Getting Information](#getting-information)
 - [Manual Upgrade](#manual-upgrade)
 - [Reset Node](#reset-node)
 - [Appendix](#appendix)
+
+## Getting Information
+
+- List all namespaces
+  ```
+  k0s kubectl get namespaces
+  ```
+
+- List all events
+  ```
+  k0s kubectl get events -A
+  ```
+
+- List versions of all pods
+  ```
+  k0s kubectl get all -A -o jsonpath='{range .items[*].spec.containers[*]}{.image}{"\n"}{end}' | sort
+  ```
 
 ## Manual Upgrade
 

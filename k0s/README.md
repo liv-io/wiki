@@ -54,7 +54,7 @@
 
 - Download, verify and install `k0s`
   ```
-  export K0S_VERSION="1.36.1+k0s.0"
+  export K0S_VERSION="1.36.2+k0s.0"
 
   install --directory --owner=root --group=root --mode=0755 /usr/local/src/k0s/${K0S_VERSION}
 
