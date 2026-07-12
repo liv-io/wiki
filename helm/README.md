@@ -16,7 +16,7 @@
 
 - Download, verify and install `helm`
   ```
-  export HELM_VERSION="4.2.2"
+  export HELM_VERSION="4.2.3"
 
   install --directory --owner=root --group=root --mode=0755 /usr/local/src/helm/${HELM_VERSION}
 
