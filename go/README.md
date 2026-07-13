@@ -31,6 +31,10 @@
   cat <<EOF > /etc/profile.d/go.sh
   PATH=${PATH}:/usr/local/share/go/bin
   EOF
+
+  source /etc/profile.d/go.sh
+
+  go version
   ```
 
 ## Commands
