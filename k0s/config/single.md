@@ -5,7 +5,6 @@
 - [Debian](#debian)
 - [k0s](#k0s)
   - [Local-Path](#local-path)
-  - [Containerd](#containerd)
   - [Traefik](#traefik)
   - [Calico](#calico)
   - [Apps](#apps)
@@ -92,29 +91,6 @@
   k0s kubectl get storageclass
   ```
 
-### Containerd
-
-- Add container registry credentials to Containerd
-  ```
-  export USERNAME="<username>"
-  export PASSWORD="<password>"
-
-  install --directory --owner=root --group=root --mode=0750 /etc/k0s/containerd.d
-
-  cat <<EOF > /etc/k0s/containerd.d/registry-auth.toml
-  version = 3
-
-  [plugins."io.containerd.cri.v1.images".registry.configs."registry.liv.io".auth]
-    username = "${USERNAME}"
-    password = "${PASSWORD}"
-  EOF
-  ```
-
-- Validate the `k0s` system
-  ```
-  k0s sysinfo | grep -v '(pass)'
-  ```
-
 ### Traefik
 
 - Install [Traefik](../../traefik/README.md#install)
@@ -166,7 +142,6 @@
 ## Appendix
 
 - [Calico](https://docs.tigera.io/calico)
-- [Containerd](https://containerd.io)
 - [Kine](https://github.com/k3s-io/kine)
 - [Kube-Router](https://kube-router.io)
 - [Traefik Ingress](https://github.com/k0sproject/k0s/blob/main/docs/examples/traefik-ingress.md)

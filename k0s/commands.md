@@ -3,6 +3,8 @@
 ## Index
 
 - [Getting Information](#getting-information)
+- [Manage Images](#manage-images)
+- [Manage Secrets](#manage-secrets)
 - [Manual Upgrade](#manual-upgrade)
 - [Reset Node](#reset-node)
 - [Appendix](#appendix)
@@ -22,6 +24,74 @@
 - List versions of all pods
   ```
   k0s kubectl get all -A -o jsonpath='{range .items[*].spec.containers[*]}{.image}{"\n"}{end}' | sort
+  ```
+
+## Manage Images
+
+- Show all images
+  ```
+  k0s ctr -n k8s.io images list
+  ```
+
+- Remove image
+  ```
+  k0s ctr -n k8s.io images remove <tag>
+  ```
+
+- Remove unused images
+  ```
+  k0s ctr -n k8s.io images prune --all
+  ```
+
+## Manage Secrets
+
+- List all secrets across all namespaces
+  ```
+  k0s kubectl get secrets -A
+  ```
+
+- List secret for a given namespace
+  ```
+  k0s kubectl get secrets -n default
+  ```
+
+- Create registry secret
+  ```
+  k0s kubectl create secret docker-registry registry.example.com \
+      --docker-server=registry.example.com \
+      --docker-username="<username>" \
+      --docker-password="<password>" \
+      --namespace=default
+  ```
+
+- Create generic secret
+  ```
+  k0s kubectl create secret generic memos-config \
+      --from-literal=PASSWORD="<password>" \
+      --from-literal=API_KEY="<key>" \
+      --namespace=default
+  ```
+
+- Create secret from file
+  ```
+  k0s kubectl create secret generic ssh-key-secret \
+      --from-file=id_ed25519=/home/user/.ssh/id_ed25519 \
+      --namespace=default
+  ```
+
+- Show secret metadata
+  ```
+  k0s kubectl describe secret <secret-name> -n default
+  ```
+
+- Decode secret
+  ```
+  k0s kubectl get secret <secret-name> -n default -o jsonpath='{.data.\.dockerconfigjson}' | base64 --decode
+  ```
+
+- Delete secret
+  ```
+  k0s kubectl delete secret <secret-name> -n default
   ```
 
 ## Manual Upgrade

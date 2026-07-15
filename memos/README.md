@@ -29,6 +29,15 @@
 
 - Install [k0s](../k0s/README.md#install)
 
+- Add container registry secret
+  ```
+  k0s kubectl create secret docker-registry registry.liv.io \
+      --docker-server="registry.liv.io" \
+      --docker-username="<username>" \
+      --docker-password="<password>" \
+      --namespace=memos
+  ```
+
 ### k0sctl
 
 - Install [k0sctl](../k0sctl/README.md#install)
@@ -263,6 +272,8 @@
           volumeMounts:
           - name: memos-db
             mountPath: /var/local/memos/db
+        imagePullSecrets:
+        - name: registry.liv.io
         volumes:
         - name: memos-db
           persistentVolumeClaim:
