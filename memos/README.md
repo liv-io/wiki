@@ -65,7 +65,7 @@
 
 ##### Traefik
 
-- Populate and deploy [Traefik](../k0s/config/single.md#traefik)
+- Install [Traefik](../traefik/README.md#install)
 
 ##### local-path
 
@@ -89,6 +89,16 @@
           path: /metadata/annotations/storageclass.kubernetes.io~1is-default-class
           value: "true"
   EOF
+  ```
+
+- Run the client-side schema validation
+  ```
+  k0s kubectl apply -k ./infra/local-path/ --dry-run=client
+  ```
+
+- Run the server-side schema validation
+  ```
+  k0s kubectl apply -k ./infra/local-path/ --dry-run=server
   ```
 
 - Apply manifest
