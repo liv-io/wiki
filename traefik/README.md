@@ -236,10 +236,11 @@
 
 - Optional: Force delete the old pod
   ```
-  k0s kubectl rollout restart deployment/traefik -n kube-system
+  k0s kubectl rollout restart -n kube-system deployment/traefik
   ```
 
 ## Appendix
 
+- [Traefik Helm Chart](https://github.com/traefik/traefik-helm-chart)
 - [Traefik Ingress](https://github.com/k0sproject/k0s/blob/main/docs/examples/traefik-ingress.md)
 - [Traefik](https://traefik.io/traefik)
