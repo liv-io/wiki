@@ -302,9 +302,9 @@
   k0s kubectl apply -k ./apps/memos/ --dry-run=client
   ```
 
-- Run the server-side schema validation
+- Create `memos` namespace from manifest for running the server-side schema validation
   ```
-  k0s kubectl create namespace memos --dry-run=client -o yaml | k0s kubectl apply -f -
+  k0s kubectl apply -f ./apps/memos/namespace.yaml
   k0s kubectl apply -k ./apps/memos/ --dry-run=server
   ```
 
