@@ -132,6 +132,11 @@
   k0s kubectl get all -n kube-system -l app.kubernetes.io/name=traefik
   ```
 
+- Get the `traefik` image version
+  ```
+  k0s kubectl get deployment traefik -n kube-system -o jsonpath='{.spec.template.spec.containers[*].image}'
+  ```
+
 - Inspect logs
   ```
   k0s kubectl logs -n kube-system deployment/traefik --tail=100 -f
@@ -145,11 +150,6 @@
 ## Config
 
 ### TLS Options
-
-- Get the Traefik version
-  ```
-  k0s kubectl get all -A -l app.kubernetes.io/name=traefik -o jsonpath='{.items[*].spec.containers[*].image}'
-  ```
 
 - Apply the Traefik Custom Resource Definition (CRD) and Role-Based Access Control (RBAC)
   ```
@@ -198,9 +198,9 @@
 
 ## Upgrade
 
-- List Traefik version
+- Get the `traefik` image version
   ```
-  k0s kubectl get all -A -l app.kubernetes.io/name=traefik -o jsonpath='{.items[*].spec.containers[*].image}'
+  k0s kubectl get deployment traefik -n kube-system -o jsonpath='{.spec.template.spec.containers[*].image}'
   ```
 
 - Update the Traefik `kustomization.yaml`
@@ -229,9 +229,9 @@
   k0s kubectl get all -n kube-system -l app.kubernetes.io/name=traefik
   ```
 
-- List Traefik version
+- Get the `traefik` image version
   ```
-  k0s kubectl get all -A -l app.kubernetes.io/name=traefik -o jsonpath='{.items[*].spec.containers[*].image}'
+  k0s kubectl get deployment traefik -n kube-system -o jsonpath='{.spec.template.spec.containers[*].image}'
   ```
 
 - Optional: Force delete the old pod

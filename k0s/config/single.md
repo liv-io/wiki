@@ -91,6 +91,11 @@
   k0s kubectl get storageclass
   ```
 
+- Get the `local-path-provisioner` image version
+  ```
+  k0s kubectl get deployment local-path-provisioner -n local-path-storage -o jsonpath='{.spec.template.spec.containers[*].image}'
+  ```
+
 ### Traefik
 
 - Install [Traefik](../../traefik/README.md#install)

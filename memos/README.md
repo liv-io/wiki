@@ -98,6 +98,7 @@
 
 - Run the server-side schema validation
   ```
+  k0s kubectl create namespace local-path-storage --dry-run=client -o yaml | k0s kubectl apply -f -
   k0s kubectl apply -k ./infra/local-path/ --dry-run=server
   ```
 
@@ -106,13 +107,9 @@
   k0s kubectl apply -k ./infra/local-path/
   ```
 
-- Restart k0s
+- Wait until `local-path-provisioner` is ready
   ```
-  systemctl restart k0scontroller.service
-
-  systemctl status k0scontroller.service --no-pager
-  k0s status
-  k0s kubectl get all -n kube-system
+  k0s kubectl get pods -n local-path-storage -w
   ```
 
 - Validate `local-path-provisioner`
@@ -123,6 +120,11 @@
 - Inspect the StorageClasses
   ```
   k0s kubectl get storageclass
+  ```
+
+- Get the `local-path-provisioner` image version
+  ```
+  k0s kubectl get deployment local-path-provisioner -n local-path-storage -o jsonpath='{.spec.template.spec.containers[*].image}'
   ```
 
 #### Apps
