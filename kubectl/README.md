@@ -31,7 +31,7 @@
   cd /usr/local/src/kubectl/${KUBECTL_VERSION}
   echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
 
-  chmod +x kubectl
+  chmod +x /usr/local/src/kubectl/${KUBECTL_VERSION}/kubectl
   ln -snf /usr/local/src/kubectl/${KUBECTL_VERSION}/kubectl /usr/local/bin/kubectl
   ```
 
