@@ -2,7 +2,6 @@
 
 ## Index
 
-- [Debian](#debian)
 - [k0s](#k0s)
   - [Local-Path](#local-path)
   - [Traefik](#traefik)
@@ -10,7 +9,7 @@
   - [Apps](#apps)
 - [Appendix](#appendix)
 
-## Debian
+## k0s
 
 - Add http/https proxy settings
   ```
@@ -25,8 +24,6 @@
 
   systemctl daemon-reload
   ```
-
-## k0s
 
 - Generate configuration file
   ```

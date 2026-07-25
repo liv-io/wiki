@@ -8,7 +8,7 @@
   - [Debian](#debian)
   - [Cosign](#cosign)
   - [yq](#yq)
-  - [Helm](#helm)
+  - [helm](#helm)
   - [k0s](#k0s)
   - [k0sctl](#k0sctl)
   - [kustomize](#kustomize)
@@ -38,9 +38,9 @@
 
 - Install [yq](../yq/README.md#install)
 
-### Helm
+### helm
 
-- Install [Helm](../helm/README.md#install)
+- Install [helm](../helm/README.md#install)
 
 ### k0sctl
 
