@@ -61,11 +61,15 @@
   ```
   install --directory --owner=root --group=root --mode=0755 /etc/systemd/system/kubesolo.service.d
 
+  NO_PROXY_SYS="${NO_PROXY:-$no_proxy}"
+  NO_PROXY_K8S=".svc,.cluster.local,10.42.0.0/16,10.43.0.0/16,10.244.0.0/16,10.96.0.0/12,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+  NO_PROXY_SUM="${NO_PROXY_SYS:+${NO_PROXY_SYS},}${NO_PROXY_K8S}"
+
   cat <<EOF > /etc/systemd/system/kubesolo.service.d/http-proxy.conf
   [Service]
-  Environment="HTTP_PROXY=http://fp.liv.io:3128"
-  Environment="HTTPS_PROXY=http://fp.liv.io:3128"
-  Environment="NO_PROXY=localhost,127.0.0.1,::1,bs.liv.io,backup.liv.io,ca.liv.io,10.1.13.43,10.42.0.0/16,10.43.0.0/16,10.244.0.0/16,10.96.0.0/12,example.liv.io,.svc,.cluster.local"
+  Environment="HTTP_PROXY=${HTTP_PROXY:-$http_proxy}"
+  Environment="HTTPS_PROXY=${HTTPS_PROXY:-$https_proxy}"
+  Environment="NO_PROXY=${NO_PROXY_SUM}"
   EOF
 
   systemctl daemon-reload
