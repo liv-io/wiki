@@ -59,10 +59,13 @@
   helmCharts:
     - name: traefik
       repo: https://traefik.github.io/charts
-      version: 41.0.1
+      version: 41.0.2
       releaseName: traefik
       namespace: kube-system
       valuesInline:
+      image:
+        tag: "v3.7.9"
+
         updateStrategy:
           type: Recreate
 
@@ -173,7 +176,7 @@
 
 - Apply the Traefik Custom Resource Definition (CRD) and Role-Based Access Control (RBAC)
   ```
-  export TRAEFIK_VERSION="3.7.6"
+  export TRAEFIK_VERSION="3.7.9"
 
   kubectl apply -f https://raw.githubusercontent.com/traefik/traefik/refs/tags/v${TRAEFIK_VERSION}/docs/content/reference/dynamic-configuration/kubernetes-crd-definition-v1.yml
 
