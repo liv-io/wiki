@@ -11,9 +11,25 @@
 
 ### Install
 
+- Create GitOps repository
+  ```
+  git init example-env
+  cd ./example-env/
+  ```
+
+- Rename `master` branch to `main`
+  ```
+  git branch -m main
+  ```
+
+- Create GitOps directory structure
+  ```
+  install --directory --mode=0755 ./infra
+  ```
+
 - Create the infra deployment directory for Traefik
   ```
-  install --directory --owner=root --group=root --mode=0750 ./infra/traefik
+  install --directory --mode=0750 ./infra/traefik
   ```
 
 - Copy (or symlink) root CA certificate
@@ -23,6 +39,10 @@
 
 - Create the Traefik `kustomization.yaml`
   ```
+  NO_PROXY_SYS="${NO_PROXY:-$no_proxy}"
+  NO_PROXY_K8S=".svc,.cluster.local,10.42.0.0/16,10.43.0.0/16,10.244.0.0/16,10.96.0.0/12,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+  NO_PROXY_SUM="${NO_PROXY_SYS:+${NO_PROXY_SYS},}${NO_PROXY_K8S}"
+
   cat <<EOF > ./infra/traefik/kustomization.yaml
   apiVersion: kustomize.config.k8s.io/v1beta1
   kind: Kustomization
@@ -103,48 +123,48 @@
           - name: LEGO_CA_CERTIFICATES
             value: /etc/traefik/ca/ca1.liv.io.crt
           - name: HTTP_PROXY
-            value: "http://fp.liv.io:3128"
+            value: "${HTTP_PROXY:-$http_proxy}"
           - name: HTTPS_PROXY
-            value: "http://fp.liv.io:3128"
+            value: "${HTTPS_PROXY:-$https_proxy}"
           - name: NO_PROXY
-            value: "localhost,127.0.0.1,::1,bs.liv.io,backup.liv.io,ca.liv.io,10.1.13.61,10.244.0.0/16,10.96.0.0/12,memos02.liv.io,.svc,.cluster.local"
+            value: "${NO_PROXY_SUM}"
   EOF
   ```
 
 - Render manifest
   ```
-  kustomize build ./infra/traefik/ --enable-helm | k0s kubectl apply --dry-run=client -f -
-  kustomize build ./infra/traefik/ --enable-helm | k0s kubectl apply --dry-run=server -f -
+  kustomize build ./infra/traefik/ --enable-helm | kubectl apply --dry-run=client -f -
+  kustomize build ./infra/traefik/ --enable-helm | kubectl apply --dry-run=server -f -
   ```
 
 - Apply manifest
   ```
-  kustomize build ./infra/traefik/ --enable-helm | k0s kubectl apply -f -
+  kustomize build ./infra/traefik/ --enable-helm | kubectl apply -f -
   ```
 
 - Verify deployment rollout status
   ```
-  k0s kubectl rollout status -n kube-system deployment/traefik
+  kubectl rollout status -n kube-system deployment/traefik
   ```
 
 - Validate Traefik
   ```
-  k0s kubectl get all -n kube-system -l app.kubernetes.io/name=traefik
+  kubectl get all -n kube-system -l app.kubernetes.io/name=traefik
   ```
 
 - Get the `traefik` image version
   ```
-  k0s kubectl get deployment traefik -n kube-system -o jsonpath='{.spec.template.spec.containers[*].image}'
+  kubectl get deployment traefik -n kube-system -o jsonpath='{.spec.template.spec.containers[*].image}'
   ```
 
 - Inspect logs
   ```
-  k0s kubectl logs -n kube-system deployment/traefik --tail=100 -f
+  kubectl logs -n kube-system deployment/traefik --tail=100 -f
   ```
 
 - Enable dashboard ad-hoc
   ```
-  k0s kubectl port-forward -n kube-system deployment/traefik 8080:8080
+  kubectl port-forward -n kube-system deployment/traefik 8080:8080
   ```
 
 ## Config
@@ -153,11 +173,11 @@
 
 - Apply the Traefik Custom Resource Definition (CRD) and Role-Based Access Control (RBAC)
   ```
-  export TRAEFIK_VERSION="3.7.5"
+  export TRAEFIK_VERSION="3.7.6"
 
-  k0s kubectl apply -f https://raw.githubusercontent.com/traefik/traefik/refs/tags/v${TRAEFIK_VERSION}/docs/content/reference/dynamic-configuration/kubernetes-crd-definition-v1.yml
+  kubectl apply -f https://raw.githubusercontent.com/traefik/traefik/refs/tags/v${TRAEFIK_VERSION}/docs/content/reference/dynamic-configuration/kubernetes-crd-definition-v1.yml
 
-  k0s kubectl apply -f https://raw.githubusercontent.com/traefik/traefik/v${TRAEFIK_VERSION}/docs/content/reference/dynamic-configuration/kubernetes-crd-rbac.yml
+  kubectl apply -f https://raw.githubusercontent.com/traefik/traefik/v${TRAEFIK_VERSION}/docs/content/reference/dynamic-configuration/kubernetes-crd-rbac.yml
   ```
 
 - Create the `tlsoptions.yaml` configuration file
@@ -188,7 +208,7 @@
 
 - Apply the `tlsoptions.yaml` configuration
   ```
-  k0s kubectl apply -f ./infra/traefik/tlsconfig.yaml
+  kubectl apply -f ./infra/traefik/tlsconfig.yaml
   ```
 
 - Check for Post-Quantum Cryptography (PQC) support
@@ -200,7 +220,7 @@
 
 - Get the `traefik` image version
   ```
-  k0s kubectl get deployment traefik -n kube-system -o jsonpath='{.spec.template.spec.containers[*].image}'
+  kubectl get deployment traefik -n kube-system -o jsonpath='{.spec.template.spec.containers[*].image}'
   ```
 
 - Update the Traefik `kustomization.yaml`
@@ -216,27 +236,27 @@
 
 - Apply manifest
   ```
-  kustomize build ./infra/traefik/ --enable-helm | k0s kubectl apply -f -
+  kustomize build ./infra/traefik/ --enable-helm | kubectl apply -f -
   ```
 
 - Verify deployment rollout status
   ```
-  k0s kubectl rollout status -n kube-system deployment/traefik
+  kubectl rollout status -n kube-system deployment/traefik
   ```
 
 - Validate Traefik
   ```
-  k0s kubectl get all -n kube-system -l app.kubernetes.io/name=traefik
+  kubectl get all -n kube-system -l app.kubernetes.io/name=traefik
   ```
 
 - Get the `traefik` image version
   ```
-  k0s kubectl get deployment traefik -n kube-system -o jsonpath='{.spec.template.spec.containers[*].image}'
+  kubectl get deployment traefik -n kube-system -o jsonpath='{.spec.template.spec.containers[*].image}'
   ```
 
 - Optional: Force delete the old pod
   ```
-  k0s kubectl rollout restart -n kube-system deployment/traefik
+  kubectl rollout restart -n kube-system deployment/traefik
   ```
 
 ## Appendix

@@ -112,7 +112,7 @@
 
 #### Traefik
 
-- Install [Traefik](../../traefik/README.md#install)
+- Install [traefik](../traefik/README.md#install)
 
 ## Upgrade
 
