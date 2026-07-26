@@ -63,8 +63,8 @@
       releaseName: traefik
       namespace: kube-system
       valuesInline:
-      image:
-        tag: "v3.7.9"
+        image:
+          tag: "v3.7.9"
 
         updateStrategy:
           type: Recreate
