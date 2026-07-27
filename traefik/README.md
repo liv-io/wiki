@@ -11,30 +11,17 @@
 
 ### Install
 
-- Create GitOps repository
-  ```
-  git init example-env
-  cd ./example-env/
-  ```
-
-- Rename `master` branch to `main`
-  ```
-  git branch -m main
-  ```
-
-- Create GitOps directory structure
-  ```
-  install --directory --mode=0755 ./infra
-  ```
-
-- Create the infra deployment directory for Traefik
+- Create `traefik` infra directory
   ```
   install --directory --mode=0750 ./infra/traefik
   ```
 
-- Copy (or symlink) root CA certificate
+- Create the root CA certificate file
   ```
-  cp /usr/local/share/ca-certificates/ca1.liv.io.crt ./infra/traefik/
+  cat <<EOF > ./infra/traefik/ca1.liv.io.crt
+  -----BEGIN CERTIFICATE-----
+  -----END CERTIFICATE-----
+  EOF
   ```
 
 - Create the Traefik `kustomization.yaml`
