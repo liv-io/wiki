@@ -23,6 +23,7 @@
 - Rename `master` branch to `main`
   ```
   git branch -m main
+  sed -i 's@master@main@g' .git/config
   ```
 
 - Create GitOps directory structure
@@ -455,6 +456,31 @@
   ```
 
 ## Commands
+
+- Inspect container
+  ```
+  kubectl exec -it -n example deployment/example -- ps -ef
+  ```
+
+- Show detailed description
+  ```
+  kubectl describe pod -n lnd
+  ```
+
+- Inspect logs
+  ```
+  kubectl logs -n example deployment/example --tail=100 -f
+  ```
+
+- Stop container
+  ```
+  kubectl scale deployment example --replicas=0 -n example
+  ```
+
+- Start container
+  ```
+  kubectl scale deployment example --replicas=1 -n example
+  ```
 
 ## Appendix
 
