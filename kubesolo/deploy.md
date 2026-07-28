@@ -8,6 +8,7 @@
   - [Infra](#infra)
   - [Apps](#apps)
   - [Pipeline](#pipeline)
+- [Commands](#commands)
 - [Appendix](#appendix)
 
 ## Deploy
@@ -470,6 +471,11 @@
 - Inspect logs
   ```
   kubectl logs -n example deployment/example --tail=100 -f
+  ```
+
+- Get image version
+  ```
+  kubectl get deployment example -n example -o jsonpath='{.spec.template.spec.containers[*].image}'
   ```
 
 - Stop container
