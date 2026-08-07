@@ -46,13 +46,10 @@
   helmCharts:
     - name: traefik
       repo: https://traefik.github.io/charts
-      version: 41.0.2
+      version: 41.1.1
       releaseName: traefik
       namespace: kube-system
       valuesInline:
-        image:
-          tag: "v3.7.9"
-
         updateStrategy:
           type: Recreate
 
@@ -220,8 +217,8 @@
    helmCharts:
      - name: traefik
        repo: https://traefik.github.io/charts
-  -   version: 41.0.0
-  +   version: 41.0.1
+  -   version: 41.1.0
+  +   version: 41.1.1
   ```
 
 - Apply manifest
