@@ -160,7 +160,7 @@
 
 - Apply the Traefik Custom Resource Definition (CRD) and Role-Based Access Control (RBAC)
   ```
-  export TRAEFIK_VERSION="3.7.9"
+  export TRAEFIK_VERSION="3.7.10"
 
   kubectl apply -f https://raw.githubusercontent.com/traefik/traefik/refs/tags/v${TRAEFIK_VERSION}/docs/content/reference/dynamic-configuration/kubernetes-crd-definition-v1.yml
 
