@@ -16,7 +16,7 @@
 
 - Download, verify and install `cosign`
   ```
-  export COSIGN_VERSION="3.1.2"
+  export COSIGN_VERSION="3.1.3"
 
   install --directory --owner=root --group=root --mode=0755 /usr/local/src/cosign/${COSIGN_VERSION}
 
