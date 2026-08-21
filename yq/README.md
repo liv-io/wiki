@@ -16,7 +16,7 @@
 
 - Download, verify and install `yq`
   ```
-  export YQ_VERSION="4.53.3"
+  export YQ_VERSION="4.53.6"
 
   install --directory --owner=root --group=root --mode=0755 /usr/local/src/yq/${YQ_VERSION}
 
