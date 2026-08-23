@@ -332,6 +332,16 @@
   kubectl get all -n example
   ```
 
+- Inspect logs
+  ```
+  kubectl logs -n example deployment/example --tail=100 -f
+  ```
+
+- Show detailed description
+  ```
+  kubectl describe pod -n example
+  ```
+
 - Query TLS encrypted endpoint
   ```
   curl --noproxy "*" https://example.liv.io
@@ -363,11 +373,13 @@
     - name: git
       image: woodpeckerci/plugin-git
       volumes:
-        - /etc/ssl/certs:/etc/ssl/certs:ro
+        - custom-ca-certs:/etc/ssl/certs/custom:ro
+      settings:
+        custom_ssl_path: /etc/ssl/certs/custom/ca1.liv.io.crt
 
   steps:
     - name: lint
-      image: registry.liv.io/liv/k8s-ops:1.36.2-1
+      image: registry.liv.io/liv/k8s-ops:1.36.2-2
       environment:
         KUBECONFIG_DATA:
           from_secret: infra-deployer
@@ -380,7 +392,7 @@
         - kustomize build ./infra/traefik/ --enable-helm | kubectl apply --dry-run=server -f -
 
     - name: deploy
-      image: registry.liv.io/liv/k8s-ops:1.36.2-1
+      image: registry.liv.io/liv/k8s-ops:1.36.2-2
       environment:
         KUBECONFIG_DATA:
           from_secret: infra-deployer
@@ -416,11 +428,13 @@
     - name: git
       image: woodpeckerci/plugin-git
       volumes:
-        - /etc/ssl/certs:/etc/ssl/certs:ro
+        - custom-ca-certs:/etc/ssl/certs/custom:ro
+      settings:
+        custom_ssl_path: /etc/ssl/certs/custom/ca1.liv.io.crt
 
   steps:
     - name: lint
-      image: registry.liv.io/liv/k8s-ops:1.36.2-1
+      image: registry.liv.io/liv/k8s-ops:1.36.2-2
       environment:
         KUBECONFIG_DATA:
           from_secret: example-deployer
@@ -433,7 +447,7 @@
         - kubectl apply -k ./apps/example/ --dry-run=server
 
     - name: deploy
-      image: registry.liv.io/liv/k8s-ops:1.36.2-1
+      image: registry.liv.io/liv/k8s-ops:1.36.2-2
       environment:
         KUBECONFIG_DATA:
           from_secret: example-deployer
@@ -465,7 +479,7 @@
 
 - Show detailed description
   ```
-  kubectl describe pod -n lnd
+  kubectl describe pod -n example
   ```
 
 - Inspect logs

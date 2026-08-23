@@ -82,20 +82,28 @@
 
   cat <<EOF > /etc/systemd/system/kubesolo.service.d/override.conf
   [Service]
+  Environment="KUBESOLO_NAME=$(hostname -s)"
   Environment="KUBESOLO_LOCAL_STORAGE_SHARED_PATH=/opt/local-path-provisioner"
   EOF
 
   systemctl daemon-reload
   ```
 
-- Run system pre-flight
+- Download and install offline `kubesolo`
   ```
-  kubesoloctl check
-  ```
+  export KUBESOLO_VERSION="1.1.9"
+  export KUBESOLO_CHECKSUM="407465105993fe8e863c138ccbb6b73688c0d10f3561aa023026516d28b6c612"
 
-- Install `kubesolo`
-  ```
-  kubesoloctl install
+  install --directory --owner=root --group=root --mode=0755 /usr/local/src/kubesolo/${KUBESOLO_VERSION}
+
+  curl --proto '=https' --tlsv1.3 \
+      --location https://github.com/portainer/kubesolo/releases/download/v${KUBESOLO_VERSION}/kubesolo-v${KUBESOLO_VERSION}-linux-amd64-offline.tar.gz \
+      --output /usr/local/src/kubesolo/${KUBESOLO_VERSION}/kubesolo-v${KUBESOLO_VERSION}-linux-amd64-offline.tar.gz
+
+  cd /usr/local/src/kubesolo/${KUBESOLO_VERSION}
+  echo "${KUBESOLO_CHECKSUM}  kubesolo-v${KUBESOLO_VERSION}-linux-amd64-offline.tar.gz" | sha256sum --check
+
+  kubesoloctl install --offline-install /usr/local/src/kubesolo/${KUBESOLO_VERSION}/kubesolo-v${KUBESOLO_VERSION}-linux-amd64-offline.tar.gz
   ```
 
 - Symlink `admin` kubeconfig
