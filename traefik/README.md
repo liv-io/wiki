@@ -46,7 +46,7 @@
   helmCharts:
     - name: traefik
       repo: https://traefik.github.io/charts
-      version: 41.3.0
+      version: 41.7.0
       releaseName: traefik
       namespace: kube-system
       valuesInline:

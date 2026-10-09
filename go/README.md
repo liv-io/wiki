@@ -16,7 +16,8 @@
 
 - Download, verify and install `go`
   ```
-  export GO_VERSION="1.26.5"
+  export GO_VERSION="1.27.2"
+  export GO_CHECKSUM="ecbadb99091a3f46e31f5f934b068b1864eafa7995211b39eaddf76996045fe5"
 
   rm -rf /usr/local/share/go
 
@@ -25,6 +26,9 @@
   curl --proto '=https' --tlsv1.3 \
       --location https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz \
       --output /usr/local/src/go/${GO_VERSION}/go${GO_VERSION}.linux-amd64.tar.gz
+
+  WORKDIR /usr/local/src/go
+  RUN sha256sum --ignore-missing --check go${GO_VERSION}.linux-amd64.tar.gz.sha256
 
   tar --extract --gzip --file=/usr/local/src/go/${GO_VERSION}/go${GO_VERSION}.linux-amd64.tar.gz --directory=/usr/local/share
 

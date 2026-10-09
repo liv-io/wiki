@@ -16,7 +16,7 @@
 
 - Download, verify and install `crictl`
   ```
-  export CRICTL_VERSION="1.36.0"
+  export CRICTL_VERSION="1.37.0"
 
   install --directory --owner=root --group=root --mode=0755 /usr/local/src/crictl/${CRICTL_VERSION}
 

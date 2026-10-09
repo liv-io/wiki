@@ -16,7 +16,7 @@
 
 - Download, verify and install `kustomize`
   ```
-  export KUSTOMIZE_VERSION="5.8.1"
+  export KUSTOMIZE_VERSION="5.8.3"
 
   install --directory --owner=root --group=root --mode=0755 /usr/local/src/kustomize/${KUSTOMIZE_VERSION}
 
