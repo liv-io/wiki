@@ -138,7 +138,7 @@
   cd /usr/local/src/kubesolo/${KUBESOLO_VERSION}
   echo "${KUBESOLO_CHECKSUM}  kubesolo-v${KUBESOLO_VERSION}-linux-amd64-offline.tar.gz" | sha256sum --check
 
-  kubesoloctl upgrade --name $(hostname -s) --version=v1.2.1 --offline-install=/usr/local/src/kubesolo/${KUBESOLO_VERSION}/kubesolo-v${KUBESOLO_VERSION}-linux-amd64-offline.tar.gz
+  kubesoloctl upgrade --name $(hostname -s) --version=v1.2.3 --offline-install=/usr/local/src/kubesolo/${KUBESOLO_VERSION}/kubesolo-v${KUBESOLO_VERSION}-linux-amd64-offline.tar.gz
   ```
 
 ## Commands
