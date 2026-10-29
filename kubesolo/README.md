@@ -91,8 +91,8 @@
 
 - Download and install offline `kubesolo`
   ```
-  export KUBESOLO_VERSION="1.2.1"
-  export KUBESOLO_CHECKSUM="f54e3e16a68b20ec30485f9bf191e16e627c1ca9e31cc5dcf8b725416076b558"
+  export KUBESOLO_VERSION="1.2.3"
+  export KUBESOLO_CHECKSUM="87dfdb609cc7700dfb4cdd7dcb0750f6fc9c1898710fb9dedc0996bc43d522ef"
 
   install --directory --owner=root --group=root --mode=0755 /usr/local/src/kubesolo/${KUBESOLO_VERSION}
 
@@ -126,8 +126,8 @@
 
 - Download and upgrade offline `kubesolo`
   ```
-  export KUBESOLO_VERSION="1.2.1"
-  export KUBESOLO_CHECKSUM="f54e3e16a68b20ec30485f9bf191e16e627c1ca9e31cc5dcf8b725416076b558"
+  export KUBESOLO_VERSION="1.2.3"
+  export KUBESOLO_CHECKSUM="87dfdb609cc7700dfb4cdd7dcb0750f6fc9c1898710fb9dedc0996bc43d522ef"
 
   install --directory --owner=root --group=root --mode=0755 /usr/local/src/kubesolo/${KUBESOLO_VERSION}
 
