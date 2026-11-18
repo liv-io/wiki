@@ -16,7 +16,7 @@
 
 - Download, verify and install `kubectl`
   ```
-  export KUBECTL_VERSION="1.36.2"
+  export KUBECTL_VERSION="1.37.1"
 
   install --directory --owner=root --group=root --mode=0755 /usr/local/src/kubectl/${KUBECTL_VERSION}
 

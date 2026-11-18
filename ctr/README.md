@@ -16,7 +16,7 @@
 
 - Download, verify and install `ctr`
   ```
-  export CTR_VERSION="1.7.34"
+  export CTR_VERSION="2.4.2"
 
   install --directory --owner=root --group=root --mode=0755 /usr/local/src/ctr/${CTR_VERSION}
 

@@ -16,7 +16,7 @@
 
 - Download, verify and install `kubesoloctl`
   ```
-  export KUBESOLOCTL_VERSION="1.2.1"
+  export KUBESOLOCTL_VERSION="1.3.0"
 
   install --directory --owner=root --group=root --mode=0755 /usr/local/src/kubesoloctl/${KUBESOLOCTL_VERSION}
 

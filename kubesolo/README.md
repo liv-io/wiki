@@ -91,8 +91,8 @@
 
 - Download and install offline `kubesolo`
   ```
-  export KUBESOLO_VERSION="1.2.3"
-  export KUBESOLO_CHECKSUM="87dfdb609cc7700dfb4cdd7dcb0750f6fc9c1898710fb9dedc0996bc43d522ef"
+  export KUBESOLO_VERSION="1.3.0"
+  export KUBESOLO_CHECKSUM="32956d77c00990676dd9b28b99bbc02f6fb8abdcd410d294aae93a4d8e2c6786"
 
   install --directory --owner=root --group=root --mode=0755 /usr/local/src/kubesolo/${KUBESOLO_VERSION}
 
@@ -126,8 +126,8 @@
 
 - Download and upgrade offline `kubesolo`
   ```
-  export KUBESOLO_VERSION="1.2.3"
-  export KUBESOLO_CHECKSUM="87dfdb609cc7700dfb4cdd7dcb0750f6fc9c1898710fb9dedc0996bc43d522ef"
+  export KUBESOLO_VERSION="1.3.0"
+  export KUBESOLO_CHECKSUM="32956d77c00990676dd9b28b99bbc02f6fb8abdcd410d294aae93a4d8e2c6786"
 
   install --directory --owner=root --group=root --mode=0755 /usr/local/src/kubesolo/${KUBESOLO_VERSION}
 
@@ -138,7 +138,7 @@
   cd /usr/local/src/kubesolo/${KUBESOLO_VERSION}
   echo "${KUBESOLO_CHECKSUM}  kubesolo-v${KUBESOLO_VERSION}-linux-amd64-offline.tar.gz" | sha256sum --check
 
-  kubesoloctl upgrade --name $(hostname -s) --version=v1.2.3 --offline-install=/usr/local/src/kubesolo/${KUBESOLO_VERSION}/kubesolo-v${KUBESOLO_VERSION}-linux-amd64-offline.tar.gz
+  kubesoloctl upgrade --name $(hostname -s) --version=v1.3.0 --offline-install=/usr/local/src/kubesolo/${KUBESOLO_VERSION}/kubesolo-v${KUBESOLO_VERSION}-linux-amd64-offline.tar.gz
   ```
 
 ## Commands
