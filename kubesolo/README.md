@@ -92,16 +92,18 @@
 - Download and install offline `kubesolo`
   ```
   export KUBESOLO_VERSION="1.3.0"
-  export KUBESOLO_CHECKSUM="32956d77c00990676dd9b28b99bbc02f6fb8abdcd410d294aae93a4d8e2c6786"
 
   install --directory --owner=root --group=root --mode=0755 /usr/local/src/kubesolo/${KUBESOLO_VERSION}
 
   curl --proto '=https' --tlsv1.3 \
       --location https://github.com/portainer/kubesolo/releases/download/v${KUBESOLO_VERSION}/kubesolo-v${KUBESOLO_VERSION}-linux-amd64-offline.tar.gz \
       --output /usr/local/src/kubesolo/${KUBESOLO_VERSION}/kubesolo-v${KUBESOLO_VERSION}-linux-amd64-offline.tar.gz
+  curl --proto '=https' --tlsv1.3 \
+      --location https://github.com/portainer/kubesolo/releases/download/v${KUBESOLO_VERSION}/SHA256SUMS \
+      --output /usr/local/src/kubesolo/${KUBESOLO_VERSION}/SHA256SUMS
 
   cd /usr/local/src/kubesolo/${KUBESOLO_VERSION}
-  echo "${KUBESOLO_CHECKSUM}  kubesolo-v${KUBESOLO_VERSION}-linux-amd64-offline.tar.gz" | sha256sum --check
+  sha256sum --ignore-missing --check SHA256SUMS
 
   kubesoloctl install --offline-install /usr/local/src/kubesolo/${KUBESOLO_VERSION}/kubesolo-v${KUBESOLO_VERSION}-linux-amd64-offline.tar.gz
   ```
@@ -127,16 +129,18 @@
 - Download and upgrade offline `kubesolo`
   ```
   export KUBESOLO_VERSION="1.3.0"
-  export KUBESOLO_CHECKSUM="32956d77c00990676dd9b28b99bbc02f6fb8abdcd410d294aae93a4d8e2c6786"
 
   install --directory --owner=root --group=root --mode=0755 /usr/local/src/kubesolo/${KUBESOLO_VERSION}
 
   curl --proto '=https' --tlsv1.3 \
       --location https://github.com/portainer/kubesolo/releases/download/v${KUBESOLO_VERSION}/kubesolo-v${KUBESOLO_VERSION}-linux-amd64-offline.tar.gz \
       --output /usr/local/src/kubesolo/${KUBESOLO_VERSION}/kubesolo-v${KUBESOLO_VERSION}-linux-amd64-offline.tar.gz
+  curl --proto '=https' --tlsv1.3 \
+      --location https://github.com/portainer/kubesolo/releases/download/v${KUBESOLO_VERSION}/SHA256SUMS \
+      --output /usr/local/src/kubesolo/${KUBESOLO_VERSION}/SHA256SUMS
 
   cd /usr/local/src/kubesolo/${KUBESOLO_VERSION}
-  echo "${KUBESOLO_CHECKSUM}  kubesolo-v${KUBESOLO_VERSION}-linux-amd64-offline.tar.gz" | sha256sum --check
+  sha256sum --ignore-missing --check SHA256SUMS
 
   kubesoloctl upgrade --name $(hostname -s) --version=v1.3.0 --offline-install=/usr/local/src/kubesolo/${KUBESOLO_VERSION}/kubesolo-v${KUBESOLO_VERSION}-linux-amd64-offline.tar.gz
   ```
